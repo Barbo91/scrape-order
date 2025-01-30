@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 
 # Configurazione logging
 logging.basicConfig(
-    filename="logs/scraper_federik_log.txt",  # File di log
+    filename="logs/scraper_federicstore_log.txt",  # File di log
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
