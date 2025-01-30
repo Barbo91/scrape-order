@@ -1,16 +1,32 @@
+# main.py
 import schedule
 import time
-from scraper.federicstore_scraper import scrape_federicstore, create_db
+from scrapers.federicstore_scraper import FedericStoreScraper
+from scrapers.fantasiastore_scraper import FantasiaStoreScraper
+from notifications.telegram_notifier import TelegramNotifier
+from notifications.discord_notifier import DiscordNotifier
+import config
 
-# Crea il database all'avvio
-create_db()
+# Initialize notifiers
+telegram_notifier = TelegramNotifier(config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_CHAT_ID)
+discord_notifier = DiscordNotifier(config.DISCORD_WEBHOOK_URL)
 
-# Funzione di scheduling per eseguire lo scraping ogni X secondi
+# Initialize scrapers
+federicstore_scraper = FedericStoreScraper()
+fantasiastore_scraper = FantasiaStoreScraper()
+
 def job():
-    scrape_federicstore()
+    try:
+        federicstore_scraper.scrape()
+        fantasiastore_scraper.scrape()
+        telegram_notifier.send_message("Scraping completed successfully.")
+        discord_notifier.send_message("Scraping completed successfully.")
+    except Exception as e:
+        telegram_notifier.send_message(f"Scraping failed: {e}")
+        discord_notifier.send_message(f"Scraping failed: {e}")
 
-# Esegui lo scraping ogni SCRAPING_INTERVAL secondi
-schedule.every(30).seconds.do(job)  # Puoi cambiare 30 con SCRAPING_INTERVAL se vuoi usare il parametro di config.py
+# Schedule the job to run every 30 seconds
+schedule.every(30).seconds.do(job)
 
 while True:
     schedule.run_pending()
