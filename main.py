@@ -1,8 +1,8 @@
 # main.py
 import schedule
 import time
-from scrapers.federicstore_scraper import FedericStoreScraper
-from scrapers.fantasiastore_scraper import FantasiaStoreScraper
+from scraper.federicstore_scraper import FedericStoreScraper
+from scraper.fantasiastore_scraper import FantasiaStoreScraper
 from notifications.telegram_notifier import TelegramNotifier
 from notifications.discord_notifier import DiscordNotifier
 import config
